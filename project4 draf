@@ -13,6 +13,7 @@ int count = 0;
 
 int pb=16;
 Ball[] jan = new Ball[pb];
+Button[] reb= new Button[7];
 //Button[] reb= new Buttom[];
 
 void setup() {
@@ -23,8 +24,13 @@ void setup() {
   jan[0].y= (dakota+texas)/2;  
   jan[0].dx = 0; 
   jan[0].dy = 0;
+  // Balls 
   for (int i=1; i<pb; i++) {
   jan[i]=  new Ball(0,255, 255, 255);
+  }
+  // buttons 
+  for (int i=0; i < reb.length; i++) {
+  reb[i] = new Button();
   }
   cardinal= new Bird();
   
@@ -34,6 +40,9 @@ void setup() {
 void draw() {
   background(130,209,219);  
   functions();
+  for (int i = 0; i < reb.length; i++) {
+    reb[i].display(i);
+     }
 }
 // Display all functions
 void functions() {
@@ -237,4 +246,26 @@ void clouds () {
         ellipse(cloud+20, 130, 40,45);
         ellipse(cloud+10, 150, 80,35);
         ellipse(cloud+30, 150, 70,50);  }
+ }
+ 
+   
+ class Button {
+    float x, y, w, h;
+    
+    Button() {
+      x = 50;
+      y = 200;
+      w = 70;
+      h = 40;
+    }
+   void display ( int i) {
+     rectMode(CENTER);
+     for (int x = 50; x <= width; x += 110) {
+      // for ( i = 0; i < reb.length; i++ )  {
+       //  x += 110;
+       stroke(0);
+       rect(x,y,w,h);
+     }
+     rectMode(CORNERS);
+    }
  }
