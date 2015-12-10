@@ -26,7 +26,8 @@ void setup() {
   jan[0].dy = 0;
   // Balls 
   for (int i=1; i<pb; i++) {
-  jan[i]=  new Ball(0,255, 255, 255);
+    //--jan[i]=  new Ball(0, 255, 255, 255);
+  jan[ i ]=  new Ball(i, 255, 255, 255);
   }
   // buttons 
   for (int i=0; i < reb.length; i++) {
@@ -42,7 +43,7 @@ void draw() {
   functions();
   for (int i = 0; i < reb.length; i++) {
     reb[i].display(i);
-     }
+  }
 }
 // Display all functions
 void functions() {
@@ -115,12 +116,12 @@ class Ball {
     this.b=  b;
     randomize();
   }
-    Ball( int n, float x, float y ) {
+  Ball( int n, float x, float y ) {
     number= n;
     randomize();
-    }
+  }
   
-  void randomize() {
+void randomize() {
     r=  random(255);
     g=  random(255);
     b=  random(255);
@@ -128,17 +129,17 @@ class Ball {
     y=  random( dakota+10, texas-10);
     dx= random( 1, 2 );
     dy= random( -2, 2 );
-   }
+}
  // DRAW 15 BALLS
-  void show() {
+ void show() {
     fill(r,g,b);
     strokeWeight(1);
     stroke(0);
     ellipse( x, y, 30, 30 );
     // Ball ID
     fill(0);
-    text("1",x,y);  //???
-   }
+    text(""+number,x-2,y);  //???
+ }
   
   //// METHODS ////
   void move() {
@@ -163,8 +164,7 @@ class Ball {
    boolean hit( float x, float y ) {
     if (dist( x,y, this.x,this.y ) < 30 ) return true;
     else return false;
-    } 
-  //}
+   } 
 }
 
 // BIRD
@@ -176,7 +176,7 @@ class Bird {
      birdX = 0; birdY = 130; birdDX = 1; birdDY = 0;
      bombY=0; bombDY = 0; gravity = 9.81/60;
      
-}
+  }
 // DISPLAY BIRD
 void display () {
      strokeWeight(1);
@@ -191,7 +191,7 @@ void display () {
    }else { 
       triangle(birdX, birdY+5, birdX-10, birdY+30, birdX+15, birdY+5);
       triangle(birdX, birdY-5, birdX-10, birdY+30, birdX+15, birdY-5);
-    }
+   }
      
       fill(234,171,107);
       triangle(birdX+30, birdY+2, birdX+40, birdY, birdX+30, birdY-2); 
@@ -220,25 +220,26 @@ void move() {
         bombY=0;
         bombDY=0;        // Bomb is gone!
       //}
-     }
-  }
+    }
+}
 
   void drop() {
     bombY=  birdY+10;
     bombDY=  gravity;
-    }
+  }
 void reset() {
       birdX=0;
       birdY=  random( 20,100 );
       birdDX=  random( 1,2 );
       bombDY=0;
-  }
+ }
+ 
 boolean hit( float birdX, float birdY ) {
     if (  dist( birdX,birdY, 10,10) < 30 ) return true;
     else return false;
     }
  } 
- 
+ // CLOUDS 
 void clouds () {
    for ( int cloud = 0; cloud < width; cloud += 150) 
    {    noStroke();
@@ -248,7 +249,7 @@ void clouds () {
         ellipse(cloud+30, 150, 70,50);  }
  }
  
-   
+   // BUTTON 
  class Button {
     float x, y, w, h;
     
@@ -259,7 +260,7 @@ void clouds () {
       h = 40;
     }
    void display ( int i) {
-     rectMode(CENTER);
+     rectMode(CENTER); 
      for (int x = 50; x <= width; x += 110) {
       // for ( i = 0; i < reb.length; i++ )  {
        //  x += 110;
