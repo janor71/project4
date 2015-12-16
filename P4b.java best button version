@@ -11,6 +11,7 @@ Bird cardinal;
 int score;
 int count = 0;
 
+String labels [] = { " rat", "wall", "balls" , "bird", "cloud", "reset", "p "};
 int pb=16;
 Ball[] jan = new Ball[pb];
 Button[] reb= new Button[7];
@@ -33,7 +34,7 @@ void setup() {
   float buttonX= 50;
   for (int i=0; i < reb.length; i++) {
    // reb[i] = new Button(buttonX, 250);  // best way to add buttons if use this need buttonX+=100;
-    reb[i] = new Button( 110 + i*110, 250);  // best way to add buttons
+    reb[i] = new Button( labels [i], 110 + i*110, 250);  // best way to add buttons
 
     //buttonX+=100;    
   }
@@ -262,15 +263,18 @@ void clouds () {
    // BUTTON 
  class Button {
     float x, y, w= 70, h=40;
+    int num;
+    String name ="";
     
     Button() {
       x = 50;
       y = 250;
     }
        
-    Button( float x, float y) {
+    Button( String s, float x, float y) {
       this.x = x;
      this.y = y;
+     this.name =s;;
     }
    void display ( int i) { 
      rectMode(CENTER);
@@ -278,7 +282,7 @@ void clouds () {
        fill(252,152,0);
        rect(x,y,w,h);
        fill(0);
-       text( " s " + x, x-10, y+10); 
+       text( name, x-10, y+10); 
        rectMode(CORNERS);
    }
  }
