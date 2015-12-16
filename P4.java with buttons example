@@ -1,0 +1,289 @@
+// PROJECT 4 
+// REBECA JANOWICZ 
+// CST 112 EVENING 
+ 
+int pooltableR=23, pooltableG=85, pooltableB= 18;             // GREEN POOL TABLE 
+float oregon = 50, texas= 700 , dakota= 300, maine = 850;    // TABLE PERIMETER 
+float midwest= 450;
+boolean wall = true;
+boolean rat = true; // trying it out
+Bird cardinal;
+int score;
+int count = 0;
+
+int pb=16;
+Ball[] jan = new Ball[pb];
+Button[] reb= new Button[7];
+//Button[] reb= new Buttom[];
+
+void setup() {
+  size(900,800);
+  smooth();
+  jan[0]=   new Ball( 0, 255, 255, 255 );  
+  jan[0].x= width/4;  
+  jan[0].y= (dakota+texas)/2;  
+  jan[0].dx = 0; 
+  jan[0].dy = 0;
+  // Balls 
+  for (int i=1; i<pb; i++) {
+    //--jan[i]=  new Ball(0, 255, 255, 255);
+   jan[ i ]=  new Ball(i, 255, 255, 255);
+  }
+  // buttons 
+  float yy=250; // this is new to prove a point. see min -13 on video
+  float xx = 50;
+  for (int i=0; i < reb.length; i++) {
+    reb[i] = new Button(xx, yy );  // best way to add buttons 
+    /* part of proving the point
+    reb[i].y = yy;*/
+    yy+=50;
+    xx+=100;
+  }
+  
+  cardinal= new Bird();
+  
+}
+
+//Draw background and initialized functions 
+void draw() {
+  String s = " s ";
+  background(130,209,219);  
+  functions();
+  for (int i = 0; i < reb.length; i++) {
+    reb[i].display(i);
+    s+=  "  "+i;
+  }
+  fill(0);
+  // text( " s reb.length: "+ reb.length, 10, 10);
+  text( s, 10, 10);
+}
+// Display all functions
+void functions() {
+  poolTable(oregon, texas, maine,dakota);    
+  move();
+  show();
+  cardinal.display();
+  cardinal.move();
+  clouds();
+  count = count +1;
+}
+
+//DISPLAY TENNIS/POOL COURT
+void poolTable(float oregon, float texas, float maine, float dakota)  {
+    rectMode(CORNERS);
+    fill(pooltableR, pooltableG, pooltableB);
+    strokeWeight(10);
+    stroke(255);
+    rect(oregon,texas,maine, dakota); 
+    fill(255);
+      
+   if (wall){
+    float midwest= (oregon+maine)/2;
+    strokeWeight(10);
+    stroke(255);
+    line(midwest, texas, midwest, dakota);
+    }
+}  
+// ball collisions
+void move() {
+  for( int i=0; i<pb-1; i++) {
+    for( int j=i+1; j<pb; j++) {    
+      collide( jan[i], jan[j] );
+    }
+   }
+  // Move all balls.
+  for( int i=0; i<pb; i++) {
+    jan[i].move();
+  }
+}
+void collide( Ball p, Ball q ) {
+  if ( p.hit( q.x,q.y ) ) {
+    float tmp;
+    tmp=p.dx;  p.dx=q.dx;  q.dx=tmp;      // Swap the velocities.
+    tmp=p.dy;  p.dy=q.dy;  q.dy=tmp;
+    //score += 1;
+  }
+}
+//// Display 
+void show() {
+  for( int i=0; i<pb; i++) {
+    jan[i].show();
+  }
+}
+// ball class
+class Ball {
+  float x,y, dx,dy;
+  float r,g,b;
+  int number;
+  
+  //// CONSTRUCTORS:
+  Ball( int n) {
+    number= n;
+   // randomize();
+  }
+  Ball( int n, float r, float g, float b ) {
+    number = n;
+    this.r=  r;
+    this.g=  g;
+    this.b=  b;
+    randomize();
+  }
+  Ball( int n, float x, float y ) {
+    number= n;
+    randomize();
+  }
+  
+void randomize() {
+    r=  random(255);
+    g=  random(255);
+    b=  random(255);
+    x=  random( midwest+10, maine-10);
+    y=  random( dakota+10, texas-10);
+    dx= random( 1, 2 );
+    dy= random( -2, 2 );
+}
+ // DRAW 15 BALLS
+ void show() {
+    fill(r,g,b);
+    strokeWeight(1);
+    stroke(0);
+    ellipse( x, y, 30, 30 );
+    // Ball ID
+    fill(0);
+    text(""+number,x-2,y);  //???
+ }
+  
+  //// METHODS ////
+  void move() {
+    if (wall){
+    x += dx; 
+    if (x < midwest+20 || x > maine) dx *=-1; 
+     //
+     y += dy; 
+     if (y > texas  || y < dakota)  dy *= -1;
+    }
+// REMOVE WALL AND BALLS BOUNCE THROGHOUT  TABLE
+    if (wall == !true){
+       x += dx; 
+    if (x < oregon || x > maine) dx *=-1; 
+     
+        y += dy; 
+    if (y > texas  || y < dakota)  dy *= -1;
+    }
+  }
+    
+    // BALL COLLISIONS
+   boolean hit( float x, float y ) {
+    if (dist( x,y, this.x,this.y ) < 30 ) return true;
+    else return false;
+   } 
+}
+
+// BIRD
+class Bird {
+   float birdX, birdY, birdDX, birdDY, bombY, bombDY, gravity;
+  
+  Bird () {
+   //  birdX = 0; birdY = 30; birdDX = 1; birdDY = 1;
+     birdX = 0; birdY = 130; birdDX = 1; birdDY = 0;
+     bombY=0; bombDY = 0; gravity = 9.81/60;
+     
+  }
+// DISPLAY BIRD
+void display () {
+     strokeWeight(1);
+     fill(240,34,61);
+     stroke(0);
+     ellipse(birdX, birdY, 60,10);
+     fill(183,31,34);
+     
+   if(count/30%2 == 0) {
+      triangle(birdX, birdY+5, birdX-10, birdY-20, birdX+15, birdY+5);
+      triangle(birdX, birdY-5, birdX-10, birdY-20, birdX+15, birdY-5);
+   }else { 
+      triangle(birdX, birdY+5, birdX-10, birdY+30, birdX+15, birdY+5);
+      triangle(birdX, birdY-5, birdX-10, birdY+30, birdX+15, birdY-5);
+   }
+     
+      fill(234,171,107);
+      triangle(birdX+30, birdY+2, birdX+40, birdY, birdX+30, birdY-2); 
+      
+ // display bomb    
+    if (bombDY>0) {
+      fill(255,0,0);
+      ellipse( birdX,bombY, 30,70 );
+    }
+}
+ // MOVE BIRD
+void move() {
+    if(birdX > width) { reset(); }
+  
+    birdY=  birdY+birdDY;
+    if (birdY > 20 && birdY <100) {
+       birdDY=  -birdDY * random(0.5,1); // Bounce up and down across the sky
+    }
+     birdX = birdX + birdDX;
+     // bomb 
+    if (bombDY>0) {
+       bombDY += gravity;
+       bombY += bombDY;
+    }
+    if (bombY>height) {
+        bombY=0;
+        bombDY=0;        // Bomb is gone!
+      //}
+    }
+}
+
+  void drop() {
+    bombY=  birdY+10;
+    bombDY=  gravity;
+  }
+void reset() {
+      birdX=0;
+      birdY=  random( 20,100 );
+      birdDX=  random( 1,2 );
+      bombDY=0;
+ }
+ 
+boolean hit( float birdX, float birdY ) {
+    if (  dist( birdX,birdY, 10,10) < 30 ) return true;
+    else return false;
+    }
+ } 
+ // CLOUDS 
+void clouds () {
+   for ( int cloud = 0; cloud < width; cloud += 150) 
+   {    noStroke();
+        fill(225);
+        ellipse(cloud+20, 130, 40,45);
+        ellipse(cloud+10, 150, 80,35);
+        ellipse(cloud+30, 150, 70,50);  }
+ }
+ 
+   // BUTTON 
+ class Button {
+    float x, y, w= 70, h=40;
+    
+    Button() {
+      x = 50;
+      y = 250;
+    }
+       
+    Button( float x, float y) {
+      this.x = x;
+     this.y = y;
+    }
+   void display ( int i) {
+     rectMode(CENTER); 
+    // for (int x = 50; x <= width; x += 110) {  // if i take this loop out I only display one button on the x axix but many on the y axis on the left side
+    //   for (int x = 50; x <= width; x += 110) { 
+       stroke(0);
+       fill(252,152,0);
+       rect(x,y,w,h);
+       fill(0);
+       text( " s " + x, x-10, y+10);
+     //}
+     rectMode(CORNERS);
+   }
+ }
